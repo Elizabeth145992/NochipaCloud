@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <title>Simple Store Locator - Azure Maps Web SDK Samples</title>
+    <title>NochipaCloud</title>
 
     <meta charset="utf-8" />
 	<link rel="shortcut icon" href="/favicon.ico"/>
@@ -12,6 +12,8 @@
     <meta name="author" content="Microsoft Azure Maps" />
 
     <!-- Add references to the Azure Maps Map control JavaScript and CSS files. -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
     <link rel="stylesheet" href="https://atlas.microsoft.com/sdk/javascript/mapcontrol/2/atlas.min.css" type="text/css" />
     <script src="https://atlas.microsoft.com/sdk/javascript/mapcontrol/2/atlas.min.js"></script>
 
@@ -21,27 +23,58 @@
     <!-- Add references to the store locator JavaScript and CSS files. -->
     <link rel="stylesheet" href="index.css" type="text/css" />
     <script src="index.js"></script>
+    <script src="http://code.jquery.com/jquery-latest.js"></script>
 </head>
 <body>
-    <header>
+    <header >
         <img src="images/Logo.png" />
-        <span id="titulo">Contoso Coffee</span>
+        <span id="titulo">NochipaCloud</span>
+            <input style="float:right; margin-right: 3px; font-family: 'Quicksand', sans-serif;" type="submit" value="Asistente Localizador" class="btn btn-dark" onclick="bot();">
+
     </header>
+    
+
+    <!-- <iframe src='https://webchat.botframework.com/embed/tiendaropa-802e-bot?s=XcfVWEsoXPU.ZJE8Q-xQJlkm_j5fPyCrvJ4PnRVKBk2RGY5meWFDUXE'  style='min-width: 400px; width: 100%; min-height: 500px;'></iframe>-->
     <main>
         <div class="searchPanel">
-            <div>
+            
                 <input id="searchTbx" type="search" placeholder="Buscar tiendas" />
                 <button id="searchBtn" title="Buscar"></button>
-            </div>
+            
         </div>
 
         <div id="listPanel"></div>
+     
+       
+        <!--<div id="boton_bot"></div>-->
+        
 
         <div id="myMap">
         </div>
 
         <button id="myLocationBtn" title="My Ubicación"></button>
     </main>
+
+
+   
+
+    <!--Modal para Bot-->
+      <div class="modal fade" id="modal_bot" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="exampleModalLabel">NochipaCloud</h5>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <iframe src='https://webchat.botframework.com/embed/tiendaropa-802e-bot?s=XcfVWEsoXPU.ZJE8Q-xQJlkm_j5fPyCrvJ4PnRVKBk2RGY5meWFDUXE'  style='min-width: 400px; width: 100%; min-height: 450px;'></iframe>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Cerrar</button>
+            </div>
+          </div>
+        </div>
+      </div>
 
 </body>
 </html>
