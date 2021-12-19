@@ -23,14 +23,14 @@ jobs:
       uses: docker/login-action@v1
       with:
         registry: https://index.docker.io/v1/
-        username: ${{ secrets.AzureAppService_ContainerUsername_4860e9c8127e4331a1a31f8737a8f96b }}
-        password: ${{ secrets.AzureAppService_ContainerPassword_99fc8b203bbb4ed6bff7b99f7a0b6918 }}
+        username: ${{ secrets.AzureAppService_ContainerUsername_790c2c54cd7a441fa9c6e111cfed0218 }}
+        password: ${{ secrets.AzureAppService_ContainerPassword_e0794dae7c9547cd9e0422d3c73ff139 }}
 
     - name: Build and push container image to registry
       uses: docker/build-push-action@v2
       with:
         push: true
-        tags: index.docker.io/${{ secrets.AzureAppService_ContainerUsername_4860e9c8127e4331a1a31f8737a8f96b }}/NochipaCloudImg:${{ github.sha }}
+        tags: index.docker.io/${{ secrets.AzureAppService_ContainerUsername_790c2c54cd7a441fa9c6e111cfed0218 }}/mcr.microsoft.com/appsvc/staticsite:${{ github.sha }}
         file: ./Dockerfile
 
   deploy:
@@ -47,5 +47,5 @@ jobs:
       with:
         app-name: 'NochipaCloud'
         slot-name: 'production'
-        publish-profile: ${{ secrets.AzureAppService_PublishProfile_6030ac5cc2b14054ad738d119888d9ca }}
-        images: 'index.docker.io/${{ secrets.AzureAppService_ContainerUsername_4860e9c8127e4331a1a31f8737a8f96b }}/NochipaCloudImg:${{ github.sha }}'
+        publish-profile: ${{ secrets.AzureAppService_PublishProfile_de80bdeced01498fba5c7791fca632ed }}
+        images: 'index.docker.io/${{ secrets.AzureAppService_ContainerUsername_790c2c54cd7a441fa9c6e111cfed0218 }}/mcr.microsoft.com/appsvc/staticsite:${{ github.sha }}'
