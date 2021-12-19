@@ -9,7 +9,7 @@ var storeLocationDataUrl = 'data/NochipaCloud.txt';
 var iconImageUrl = 'images/CoffeeIcon.png';
 
 //An array of country region ISO2 values to limit searches to.
-var countrySet = ['US', 'CA', 'GB', 'FR','DE','IT','ES','NL','DK'];      
+var countrySet = ['MX'];      
 
 var map, popup, datasource, iconLayer, centerMarker, searchURL;
 var listItemTemplate = '<div class="listItem" onclick="itemSelected(\'{id}\')"><div class="listItem-title">{title}</div>{city}<br />Open until {closes}<br />{distance} miles away</div>';
@@ -18,7 +18,7 @@ function initialize() {
     //Initialize a map instance.
     map = new atlas.Map('myMap', {
         center: [-99.12, 19.49],
-        zoom: 2,
+        zoom: 4,
         view: 'Auto',
 
                 //Add authentication details for connecting to Azure Maps.
@@ -126,7 +126,7 @@ function initialize() {
                 },
                 filter: ['!', ['has', 'point_count']] //Filter out clustered points from this layer.
             });
-
+            console.log(map)
             map.layers.add(iconLayer);
 
             //When the mouse is over the cluster and icon layers, change the cursor to be a pointer.
@@ -180,9 +180,10 @@ function loadStoreData() {
             var header = {};
             var numColumns = row.length;
             var i;
-console.log(storeLocationDataUrl)
+
             for (i = 0; i < row.length; i++) {
                 header[row[i]] = i;
+                console.log(header[row[i]]);
             }
 
             //Skip the header row and then parse each row into a GeoJSON feature.
@@ -193,16 +194,20 @@ console.log(storeLocationDataUrl)
                 if (row.length >= numColumns) {
 
                     features.push(new atlas.data.Feature(new atlas.data.Point([parseFloat(row[header['Longitude']]), parseFloat(row[header['Latitude']])]), {
-                        AddressLine: row[header['AddressLine']],
+                        Name: row[0],
+                        AddressLine: row[header['Line']],
                         City: row[header['City']],
-                        Municipality: row[header['Municipality']],
-                        AdminDivision: row[header['AdminDivision']],
-                        Country: row[header['Country']],
+                        //Municipality: row[header['Municipality']],
+                        //AdminDivision: row[header['AdminDivision']],
+                        //Country: row[header['Country']],
                         PostCode: row[header['PostCode']],
-                        Phone: row[header['Phone']],
+                       // Phone: row[header['Phone']],
+                       Clothe1: row[header['Clothe1']],
+                       Clothe2: row[header['Clothe2']],
+                       Clothe3: row[header['Clothe3']],
                         StoreType: row[header['StoreType']],
-                        IsWiFiHotSpot: (row[header['IsWiFiHotSpot']].toLowerCase() === 'true') ? true : false,
-                        IsWheelchairAccessible: (row[header['IsWheelchairAccessible']].toLowerCase() === 'true') ? true : false,
+                        //IsWiFiHotSpot: (row[header['IsWiFiHotSpot']].toLowerCase() === 'true') ? true : false,
+                        //IsWheelchairAccessible: (row[header['IsWheelchairAccessible']].toLowerCase() === 'true') ? true : false,
                         Opens: parseInt(row[header['Opens']]),
                         Closes: parseInt(row[header['Closes']])
                     }));
@@ -211,7 +216,7 @@ console.log(storeLocationDataUrl)
 
             //Add the features to the data source.
             datasource.add(features);
-
+            console.log(Object.values(features));
             //Initially update the list items.
             updateListItems();
         });
@@ -253,16 +258,16 @@ function setMapToUserLocation() {
         //If an error occurs when trying to access the users position information, display an error message.
         switch (error.code) {
             case error.PERMISSION_DENIED:
-                alert('User denied the request for Geolocation.');
+                alert('El usuario denegó la solicitud de geolocalización.');
                 break;
             case error.POSITION_UNAVAILABLE:
-                alert('Position information is unavailable.');
+                alert('La información de la posición no está disponible.');
                 break;
             case error.TIMEOUT:
-                alert('The request to get user position timed out.');
+                alert('Se agotó el tiempo de espera de la solicitud para obtener la posición del usuario.');
                 break;
             case error.UNKNOWN_ERROR:
-                alert('An unknown error occurred.');
+                alert('Un error desconocido ha ocurrido');
                 break;
         }
     });
@@ -330,7 +335,7 @@ function updateListItems() {
             properties = shape.getProperties();
 
             html.push('<div class="listItem" onclick="itemSelected(\'', shape.getId(), '\')"><div class="listItem-title">',
-                properties['AddressLine'],
+                properties['Line'],
                 '</div>',
 
                 //Get a formatted address line 2 value that consists of City, Municipality, AdminDivision, and PostCode.
@@ -338,12 +343,11 @@ function updateListItems() {
                 '<br />',
 
                 //Convert the closing time into a nicely formated time.
-                getOpenTillTime(properties),
-                '<br />',
+            
 
                 //Get the distance of the shape.
                 distances[shape.getId()],
-                ' miles away</div>');
+                ' Kilometros de ditancia</div>');
 
                 
         });
@@ -440,35 +444,15 @@ function showPopup(shape) {
     var html = ['<div class="storePopup">'];
 
     html.push('<div class="popupTitle">',
-        properties['AddressLine'],
+        properties['Name'],
         '<div class="popupSubTitle">',
         getAddressLine2(properties),
-        '</div></div><div class="popupContent">',
-
-        //Convert the closing time into a nicely formated time.
-        getOpenTillTime(properties),
-
-        //Add the distance information.  
-        '<br/>', distance,
-        ' miles away',
-        '<br /><img src="images/PhoneIcon.png" title="Phone Icon"/><a href="tel:',
-        properties['Phone'],
-        '">', 
-        properties['Phone'],
-        '</a>'
+        '</div></div><div class="popupContent">#',properties['AddressLine'], ', ',properties['City'], ' '  ,distance,
+        ' Kilometros de distancia<br>'
     );
+    
 
-    if (properties['IsWiFiHotSpot'] || properties['IsWheelchairAccessible']) {
-        html.push('<br/>Amenities: ');
-
-        if (properties['IsWiFiHotSpot']) {
-            html.push('<img src="images/WiFiIcon.png" title="Wi-Fi Hotspot"/>');
-        }
-
-        if (properties['IsWheelchairAccessible']) {
-            html.push('<img src="images/WheelChair-small.png" title="Wheelchair Accessible"/>');
-        }
-    }
+    
 
     html.push('</div></div>');
 
@@ -485,20 +469,18 @@ function showPopup(shape) {
 
 //Creates an addressLine2 string consisting of City, Municipality, AdminDivision, and PostCode.
 function getAddressLine2(properties) {
-    var html = [properties['City']];
+    var html = ['#',properties['AddressLine']];
+    
 
-    if (properties['Municipality']) {
-        html.push(', ', properties['Municipality']);
+    if (properties['City']) {
+        html.push(', ', properties['City']);
     }
 
-    if (properties['AdminDivision']) {
-        html.push(', ', properties['AdminDivision']);
+    if (properties['Name']) {
+        html.push(' ', properties['Name']);
     }
 
-    if (properties['PostCode']) {
-        html.push(' ', properties['PostCode']);
-    }
-
+    html.pop();
     return html.join('');
 }
 
